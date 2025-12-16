@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>TheBoxingExperince</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <!-- MediaPipe and drawing utils from unpkg -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🌑LUNARIS-STYLE🥊<br><span style="font-size:0.5em; color:white;">✨Boxing Experience✨</span></h1>
+
+    <div class="video-area">
+      <video id="video" playsinline style="display:none;"></video>
+      <canvas id="output" width="640" height="480"></canvas>
+    </div>
+
+    <!-- HUD -->
+    <div class="hud">
+      <div class="stat-box">
+        <div class="label">SCORE</div>
+        <div class="value" id="rep-count">0</div>
+      </div>
+
+      <!-- Lives Display (Dynamic) -->
+      <div class="stat-box">
+        <div class="label" id="faultsLabel">LIVES</div>
+        <div class="value" id="issues">❤️❤️❤️</div>
+      </div>
+
+      <!-- Timer Display (Dynamic) -->
+      <div class="stat-box" id="timerBox" style="display:none;">
+        <div class="label">TIME</div>
+        <div class="value" id="timer">60</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="label">STATUS</div>
+        <div class="value" id="state">IDLE</div>
+      </div>
+    </div>
+<!-- Mode Selection / Controls -->
+<div class="controls" id="controlsArea">
+  <div id="missionSelect">
+    <h3>SELECT MISSION</h3>
+
+    <div class="mission-grid">
+      <button class="mode-btn" data-mode="CLASSIC">
+        <span class="mode-title">STRIKER MODE</span>
+      </button>
+
+      <button class="mode-btn" data-mode="BLITZ">
+        <span class="mode-title">BLITZ MODE</span>
+        <span class="mode-desc">60s. Max Score.</span>
+      </button>
+
+      <button class="mode-btn" data-mode="ZEN">
+        <span class="mode-title">ZEN</span>
+        <span class="mode-desc">Chill. No Die.</span>
+      </button>
+
+      <button class="mode-btn" data-mode="HARDCORE">
+        <span class="mode-title">HARDCORE</span>
+        <span class="mode-desc">1 Life. Max Speed.</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="activeControls" style="display:none;">
+    <button id="stopBtn" disabled>ABORT MISSION</button>
+  </div>
+</div>
+
+      <!-- Legacy compatibility (hidden) -->
+      <button id="startBtn" style="display:none;">START</button>
+      <button id="saveBtn" style="display:none;">SAVE</button>
+    </div>
+
+    <div id="coachBox" class="coach"></div>
+    <div id="log"></div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal">
+      <div class="modal-content">
+        <h2>MISSION FAILED</h2>
+        <p>Your Score: <span id="finalScore">0</span></p>
+        <div class="input-group">
+          <input type="text" id="initials" maxlength="3" placeholder="AAA" />
+          <button id="submitScoreBtn">SUBMIT SCORE</button>
+        </div>
+        <div class="leaderboard">
+          <h3>PILOT RANKINGS</h3>
+          <ul id="leaderboardList"></ul>
+        </div>
+        <button id="closeModalBtn"
+          onclick="document.getElementById('gameOverModal').style.display='none'">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
