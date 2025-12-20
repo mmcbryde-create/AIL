@@ -29,32 +29,36 @@ body {
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1200px;
   width: 100%;
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative; /* Context for absolute positioning on large screens */
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: clamp(1.2rem, 4vw, 2rem);
   color: var(--neon-cyan);
   text-shadow: 2px 2px var(--neon-pink);
   margin-bottom: 2rem;
   text-align: center;
   line-height: 1.5;
+  width: 100%;
 }
 
 /* Video / HUD Area */
 .video-area {
   position: relative;
-  width: 640px;
-  height: 480px;
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 4 / 3;
+  height: auto;
   background: #000;
   border: var(--hud-border);
   box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 20px var(--neon-cyan);
-  margin-bottom: 20px;
+  margin: 0 auto 20px auto;
   overflow: hidden;
 }
 
@@ -80,6 +84,7 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 
@@ -91,13 +96,12 @@ h1 {
   align-items: flex-start;
   justify-content: center;
   flex-wrap: wrap;
-  /* Stack on small screens */
   margin-bottom: 20px;
 }
 
 /* Stats Panel (HUD) */
-/* Consolidated .hud definition */
 .hud {
+  /* Default Desktop Layout: Absolute Left */
   position: absolute;
   left: 20px;
   top: 120px;
@@ -108,19 +112,18 @@ h1 {
   padding: 20px;
   border: 2px solid var(--neon-cyan);
   box-shadow: 4px 4px 0px var(--neon-cyan);
-  min-width: 200px;
+  width: 200px;
   z-index: 10;
+  box-sizing: border-box;
 }
 
 .stat-box {
   background: rgba(0, 0, 0, 0.65);
-  /* Updated from previous override */
   padding: 15px 25px;
   border-radius: 15px;
   text-align: left;
   border: 2px solid #ffffff55;
   margin-bottom: 0;
-  /* Clear previous defaults if any */
 }
 
 .stat-box .label {
@@ -137,9 +140,25 @@ h1 {
   font-size: 2rem;
   font-weight: bold;
   text-align: left;
+  word-wrap: break-word; /* Prevent overflow */
 }
 
 /* Controls */
+#controlsArea {
+  /* Default Desktop Layout: Absolute Right */
+  position: absolute;
+  right: 20px;
+  top: 120px;
+  width: 260px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #333;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+  z-index: 20;
+  box-sizing: border-box;
+}
+
 .controls {
   display: flex;
   gap: 15px;
@@ -185,6 +204,8 @@ button:disabled {
 #activeControls {
   display: flex;
   gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 #infoBtn {
@@ -209,6 +230,7 @@ button:disabled {
   color: var(--neon-cyan);
   font-size: 0.8rem;
   line-height: 1.4;
+  box-sizing: border-box;
 }
 
 #log {
@@ -220,24 +242,12 @@ button:disabled {
   color: #888;
   border-top: 1px solid #333;
   padding-top: 10px;
-}
-
-/* Mission Select / Controls Area (Moved from inline style) */
-#controlsArea {
-  position: absolute;
-  right: 20px;
-  top: 120px;
-  width: 260px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 20px;
-  border-radius: 12px;
-  border: 2px solid #333;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
-  z-index: 20;
+  box-sizing: border-box;
 }
 
 #missionSelect h3 {
   text-align: center;
+  font-size: 1rem;
 }
 
 .mission-grid {
@@ -246,7 +256,7 @@ button:disabled {
   gap: 12px;
 }
 
-.mode-btn {
+.mode-btn, .skin-btn {
   width: 100%;
   padding: 12px;
   background: #222;
@@ -255,9 +265,11 @@ button:disabled {
   border-radius: 10px;
   cursor: pointer;
   transition: 0.25s;
+  font-family: inherit; /* Ensure font matches */
+  font-size: 0.8rem;
 }
 
-.mode-btn:hover {
+.mode-btn:hover, .skin-btn:hover {
   background: #dc8a0f;
   transform: scale(1.03);
 }
@@ -274,16 +286,19 @@ button:disabled {
   background-color: rgba(0, 0, 0, 0.8);
   justify-content: center;
   align-items: center;
+  padding: 20px; /* Prevent edge touching */
+  box-sizing: border-box;
 }
 
 .modal-content {
   background-color: var(--panel-bg);
   border: 4px solid var(--neon-pink);
-  padding: 40px;
+  padding: 30px;
   text-align: center;
   max-width: 500px;
-  width: 80%;
+  width: 100%;
   box-shadow: 0 0 30px var(--neon-pink);
+  box-sizing: border-box;
 }
 
 .input-group {
@@ -291,6 +306,7 @@ button:disabled {
   display: flex;
   gap: 10px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 input[type="text"] {
@@ -322,4 +338,60 @@ input[type="text"] {
   padding: 5px 0;
   color: #aaa;
   font-size: 0.8rem;
+}
+
+/* 
+   RESPONSIVE BREAKPOINT 
+   Switch from absolute sidebar layouts to stacked specific layout 
+   when screen width is less than ~1200px (or smaller if preferred, 
+   but 1200 covers tablets in landscape often)
+*/
+@media (max-width: 1200px) {
+  .hud, #controlsArea {
+    position: static; /* Remove absolute positioning */
+    width: 100%;
+    max-width: 600px; /* Keep them neat */
+    margin: 10px auto; /* Center them */
+  }
+
+  .hud {
+     flex-direction: row;
+     flex-wrap: wrap;
+     justify-content: center;
+  }
+  
+  .stat-box {
+    flex: 1 1 150px; /* Allow growing, shrinking, basis 150px */
+    min-width: 140px;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  h1 {
+     margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Smaller mobile specific tweaks */
+  .hud {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .stat-box .value {
+     font-size: 1.5rem;
+  }
+  
+  button {
+    padding: 12px 15px;
+    font-size: 0.8rem;
+  }
+  
+  .video-area {
+     margin-bottom: 10px;
+     border-width: 2px; /* Thinner border for small screens */
+  }
 }
